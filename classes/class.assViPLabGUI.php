@@ -628,6 +628,18 @@ class assViPLabGUI extends assQuestionGUI
 		$qst_txt = $soltpl->get();
 		
 		$solutiontemplate = new ilTemplate("tpl.il_as_tst_solution_output.html",TRUE, TRUE, "Modules/TestQuestionPool");
+
+        $feedback = '';
+        if ($show_feedback) {
+            if (!$this->isTestPresentationContext()) {
+                $fb = $this->getGenericFeedbackOutput((int) $active_id, $pass);
+                $feedback .= strlen($fb) ? $fb : '';
+            }
+        }
+        if (strlen($feedback)) {
+            $solutiontemplate->setVariable("FEEDBACK", $this->object->prepareTextareaOutput($feedback, true));
+        }
+
 		$solutiontemplate->setVariable("SOLUTION_OUTPUT", $qst_txt);
 		$solutionoutput = $solutiontemplate->get(); 
 		if (!$show_question_only)
