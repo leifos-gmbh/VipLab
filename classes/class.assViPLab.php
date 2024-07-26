@@ -254,7 +254,6 @@ class assViPLab extends assQuestion
 			$this->setId($question_id);
 			$this->setTitle($data["title"] ?? "");
 			$this->setComment($data["description"] ?? "");
-			$this->setSuggestedSolution($data["solution_hint"] ?? "");
 			$this->setOriginalId($data["original_id"]);
 			$this->setObjId($data["obj_fi"] ?? 0);
 			$this->setAuthor($data["author"] ?? "");
@@ -443,7 +442,7 @@ class assViPLab extends assQuestion
 	 * @param boolean $returndetails (deprecated !!)
 	 * @access public
 	 */
-	function calculateReachedPoints($active_id, $pass = NULL, $authorizedSolution = true, $returndetails = FALSE)
+	function calculateReachedPoints($active_id, $pass = NULL, $authorizedSolution = true, $returndetails = FALSE): float
 	{
 		global $ilDB;
 		
@@ -457,7 +456,7 @@ class assViPLab extends assQuestion
 			array($active_id, $this->getId(), $pass)
 		);
 
-		$points = 0;
+		$points = 0.0;
 		while ($data = $ilDB->fetchAssoc($result))
 		{
 			$points += $data["points"];

@@ -23,8 +23,7 @@ class assViPLabGUI extends assQuestionGUI
 	{
 		parent::__construct($a_id);
 		$this->object = new assViPLab();
-		$this->newUnitId = null;
-		
+
 		if ($a_id >= 0)
 		{
 			$this->object->loadFromDb($a_id);
