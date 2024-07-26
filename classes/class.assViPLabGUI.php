@@ -442,10 +442,8 @@ class assViPLabGUI extends assQuestionGUI
 		$template = $this->getPlugin()->getTemplate('tpl.il_as_viplab_preview.html');
 		
 		$template->setVariable(
-			'QUESTIONTEXT', 
-			$this->getViPLabQuestion()->prepareTextareaOutput(
-				$this->getViPLabQuestion()->getQuestion(), 
-				true)
+			'QUESTIONTEXT',
+			ilLegacyFormElementsUtil::prepareTextareaOutput($this->getViPLabQuestion()->getQuestion(), true)
 		);
 		
 		$settings = ilViPLabSettings::getInstance();
@@ -502,7 +500,7 @@ class assViPLabGUI extends assQuestionGUI
 		$sol_id = $this->createSolution($active_id, $pass, false);
 
 		
-		$atpl->setVariable('QUESTIONTEXT', $this->getViPLabQuestion()->prepareTextareaOutput($this->getViPLabQuestion()->getQuestion(), TRUE));
+		$atpl->setVariable('QUESTIONTEXT', ilLegacyFormElementsUtil::prepareTextareaOutput($this->getViPLabQuestion()->getQuestion(), true));
 		$atpl->setVariable('VIP_ECS_URL', $settings->getECSServer()->getServerURI());
 		$atpl->setVariable('VIP_COOKIE',$this->getViPLabQuestion()->getVipCookie());
 		$atpl->setVariable('VIP_MID',$settings->getLanguageMid($this->getViPLabQuestion()->getVipLang()));
@@ -571,7 +569,10 @@ class assViPLabGUI extends assQuestionGUI
 				$soltpl = $this->getPlugin()->getTemplate('tpl.viplab_solution_output.html');
 		}
 
-		$soltpl->setVariable('SOLUTION_TXT', $this->object->prepareTextareaOutput($this->object->getQuestion(), TRUE));
+		$soltpl->setVariable(
+			'SOLUTION_TXT',
+			ilLegacyFormElementsUtil::prepareTextareaOutput($this->object->getQuestion(), true)
+		);
 		
 		$this->getViPLabQuestion()->deleteSubParticipant();
 		$this->addSubParticipant();
@@ -637,7 +638,10 @@ class assViPLabGUI extends assQuestionGUI
             }
         }
         if (strlen($feedback)) {
-            $solutiontemplate->setVariable("FEEDBACK", $this->object->prepareTextareaOutput($feedback, true));
+            $solutiontemplate->setVariable(
+                "FEEDBACK",
+                ilLegacyFormElementsUtil::prepareTextareaOutput($feedback, true)
+            );
         }
 
 		$solutiontemplate->setVariable("SOLUTION_OUTPUT", $qst_txt);
