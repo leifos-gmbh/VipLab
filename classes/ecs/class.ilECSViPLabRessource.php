@@ -75,10 +75,6 @@ class ilECSViPLabRessource
 		return $this->id;
 	}
 	
-	/**
-	 * Get db object
-	 * @return ilDB
-	 */
 	protected function getDB()
 	{
 		return $this->db;

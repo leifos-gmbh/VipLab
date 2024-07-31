@@ -1,9 +1,7 @@
 <?php
 
-use Monolog\Handler\NullHandler;
-use Monolog\Logger;
-
 include_once "./Modules/TestQuestionPool/classes/class.ilQuestionsPlugin.php";
+include_once './Modules/TestQuestionPool/classes/class.assQuestion.php';
 
 /**
  * ViPLab plugin definition
@@ -101,7 +99,7 @@ class ilassViPLabPlugin extends ilQuestionsPlugin
 		{
 			ilLoggerFactory::getLogger('viplab')->warning('Expected json Points received: ');
 			ilLoggerFactory::getLogger('viplab')->dump($points, ilLogLevel::WARNING);
-			return false;
+			return;
 		}
 		
 		$identifier = (string) $points->Points->identifier;
@@ -111,8 +109,9 @@ class ilassViPLabPlugin extends ilQuestionsPlugin
 		
 		if (isset($qid) && isset($active_id) && isset($pass))
 		{
-			include_once './Modules/TestQuestionPool/classes/class.assQuestion.php';
-			assQuestion::_setReachedPoints($active_id, $qid, $received_points, assQuestion::_getMaximumPoints($qid), $pass, true, true);
+            $viplabQuestion = new assViPLab();
+            $viplabQuestion->loadFromDb($qid);
+			assQuestion::_setReachedPoints($active_id, $qid, $received_points, $viplabQuestion->getPoints(), $pass, true, true);
 			// todo lp status wrapper
 		}
 		else

@@ -20,15 +20,16 @@ class ilECSSolutionConnector extends ilECSConnector
 	{
 		parent::__construct($settings);
 	}
-	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
-	public function addSolution($sol, $a_receiver_com)
-	{
+
+
+    /**
+     * @param $sol
+     * @param $a_receiver_com
+     * @return int
+     * @throws ilECSConnectorException
+     */
+	public function addSolution($sol, $a_receiver_com): int
+    {
 		
 		ilLoggerFactory::getLogger('viplab')->debug('Add new solution ressource for subparticipant: ' . print_r($a_receiver_com,true));
 		ilLoggerFactory::getLogger('viplab')->debug(print_r($sol,true));
@@ -84,13 +85,14 @@ class ilECSSolutionConnector extends ilECSConnector
 	 	}
 		
 	}
-	
-	/**
-	 * Delete sub participant
-	 * @param type $a_sub_id
-	 */
-	public function deleteSolution($a_sol_id)
-	{
+
+    /**
+     * @param $a_sol_id
+     * @return ilECSResult
+     * @throws ilECSConnectorException
+     */
+	public function deleteSolution($a_sol_id): ilECSResult
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Delete solution with id '. $a_sol_id);
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	
@@ -115,13 +117,12 @@ class ilECSSolutionConnector extends ilECSConnector
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	}
 	}
-	
-	/**
-	 * Add Header
-	 * @param string $a_name
-	 * @param string $a_value
-	 * @deprecated
-	 */
+
+    /**
+     * @param $a_name
+     * @param $a_value
+     * @return void
+     */
 	public function addHeader($a_name,$a_value): void
 	{
 		if(is_array($a_value))

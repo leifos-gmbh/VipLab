@@ -18,15 +18,15 @@ class ilViPLabUtil
 		return self::$languages;
 	}
 
-	/**
-	 * Get ecs community id by mid
-	 *
-	 * @param ilECSSetting $server
-	 * @param int $a_mid
-	 * @return int
-	 */
-	public static function lookupCommunityByMid(ilECSSetting $server, int $a_mid)
-	{
+    /**
+     * Get ecs community id by mid
+     *
+     * @param ilECSSetting $server
+     * @param int $a_mid
+     * @return ilECSCommunity|null
+     */
+	public static function lookupCommunityByMid(ilECSSetting $server, int $a_mid): ?ilECSCommunity
+    {
 		try
 		{
 			include_once './Services/WebServices/ECS/classes/class.ilECSCommunityReader.php';
@@ -36,7 +36,7 @@ class ilViPLabUtil
 		catch (ilECSConnectorException $e)
 		{
 			ilLoggerFactory::getLogger('viplab')->error('Reading community failed with message: ' . $e->getMessage());
-			return 0;
+			return null;
 		}
 	}
 
@@ -77,9 +77,8 @@ class ilViPLabUtil
 		}
 		else
 		{
-			ilLoggerFactory::getLogger('viplab')->warning('Failed opening zip archive');
+            throw new RuntimeException('Failed opening zip archive: ' . $tmp_name);
 		}
-		return; 
 	}
 
 	/**

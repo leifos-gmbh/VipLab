@@ -20,50 +20,16 @@ class ilECSVipResultConnector extends ilECSConnector
 	{
 		parent::__construct($settings);
 	}
-	
-	/**
-	 * Read result
-	 * @param type $a_id
-	 * @return \ilECSResult
-	 * @throws ilECSConnectorException
-	 * @deprecated unused
-	 */
-	public function getResult($a_id)
-	{
-		$this->path_postfix = self::RESOURCE_PATH.'/'.$a_id;
 
-		try {
-			$this->prepareConnection();
-			$this->addHeader('Content-Type', 'application/json');
-			$this->addHeader('Accept', 'application/json');
 
-			$res = $this->call();
-
-			// Checking status code
-			$info = $this->curl->getInfo(CURLINFO_HTTP_CODE);
-			if($info != self::HTTP_CODE_OK)
-			{
-				ilLoggerFactory::getLogger('viplab')->warning('Cannot read viplab result, did not receive HTTP 200');
-				throw new ilECSConnectorException('Received HTTP status code: '.$info);
-			}
-			$result = new ilECSResult($res);
-			return $result;
-	 	}
-	 	catch(ilCurlConnectionException $exc)
-	 	{
-	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
-
-	}
-	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
-	public function addResult($result, $a_receiver_com)
-	{
+    /**
+     * @param $result
+     * @param $a_receiver_com
+     * @return int
+     * @throws ilECSConnectorException
+     */
+	public function addResult($result, $a_receiver_com): int
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Add new result resource for subparticipant: '.$a_receiver_com);
 
 	 	$this->path_postfix = self::RESOURCE_PATH;
@@ -111,13 +77,13 @@ class ilECSVipResultConnector extends ilECSConnector
 		
 	}
 
-	/**
-	 * Delete sub participant
-	 * @param type $a_exc_id
-	 * @deprecated unused
-	 */
-	public function deleteResult($a_exc_id)
-	{
+    /**
+     * @param $a_exc_id
+     * @return ilECSResult
+     * @throws ilECSConnectorException
+     */
+	public function deleteResult($a_exc_id): ilECSResult
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Delete result with id: ' . $a_exc_id);
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	

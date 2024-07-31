@@ -225,12 +225,9 @@ class assViPLabGUI extends assQuestionGUI
 	 * Initialize applet editor
 	 * 
 	 * TODO: dependencies
-	 * @return type
 	 */
 	protected function initEditor()
 	{
-		global $DIC;
-		
 		$form = $this->initEditQuestionForm();
 		
 		if(!$form->checkInput())
@@ -238,7 +235,7 @@ class assViPLabGUI extends assQuestionGUI
 			$form->setValuesByPost();
 			$this->tpl->setOnScreenMessage('failure', $this->lng->txt('err_check_input'), true);
 			$this->editQuestion($form);
-			return TRUE;
+			return;
 		}
 
 		// form valid
@@ -255,8 +252,7 @@ class assViPLabGUI extends assQuestionGUI
 
 		$this->getViPLabQuestion()->saveToDb();
 		
-		
-		return $this->editQuestion($form);
+		$this->editQuestion($form);
 	}
 	
 	/**
@@ -304,14 +300,14 @@ class assViPLabGUI extends assQuestionGUI
 	{
 		return $this->getViPLabQuestion()->createEvaluation();
 	}
-	
-	/**
-	 * Create a new solution
-	 * @return int
-	 */
-	protected function createResult($a_active_id, $a_pass)
-	{
-		$this->getViPLabQuestion()->createResult($a_active_id, $a_pass);
+
+    /**
+     * Create a new solution
+     * @throws ilECSConnectorException
+     */
+	protected function createResult($a_active_id, $a_pass): int
+    {
+		return $this->getViPLabQuestion()->createResult($a_active_id, $a_pass);
 	}
 
 	/**
@@ -325,7 +321,7 @@ class assViPLabGUI extends assQuestionGUI
 
 	protected function addSubParticipant()
 	{
-		return $this->getViPLabQuestion()->addSubParticipant();
+		$this->getViPLabQuestion()->addSubParticipant();
 	}
 
 	/**
@@ -472,18 +468,18 @@ class assViPLabGUI extends assQuestionGUI
 		
 		return $preview;
 	}
-	
-	/**
-	 * New implementation get testoutput
-	 * @param type $active_id
-	 * @param type $pass
-	 * @param type $is_question_postponed
-	 * @param type $user_post_solutions
-	 * @param type $show_specific_inline_feedback
-	 * @return type
-	 */
-	public function getTestOutput($active_id, $pass, $is_question_postponed, $user_post_solutions, $show_specific_inline_feedback)
-	{
+
+    /**
+     * @param $active_id
+     * @param $pass
+     * @param $is_question_postponed
+     * @param $user_post_solutions
+     * @param $show_specific_inline_feedback
+     * @return string
+     * @throws ilTemplateException
+     */
+	public function getTestOutput($active_id, $pass, $is_question_postponed, $user_post_solutions, $show_specific_inline_feedback): string
+    {
 		global $DIC;
 		$tpl = $DIC->ui()->mainTemplate();
 		
@@ -528,21 +524,22 @@ class assViPLabGUI extends assQuestionGUI
 		$tpl->addJavaScript($this->getPlugin()->getDirectory().'/js/question_init.js');
 		return $pageoutput;
 	}
-	
 
-	/**
-	 * Show solution output
-	 * @param integer $active_id             The active id
-	 * @param integer $pass                  The test pass
-	 * @param boolean $graphicalOutput       Show visual feedback for right/wrong answers
-	 * @param boolean $result_output         Show the reached points for parts of the question
-	 * @param boolean $show_question_only    Show the question without the ILIAS content around
-	 * @param boolean $show_feedback         Show the question feedback
-	 * @param boolean $show_correct_solution Show the correct solution instead of the user solution
-	 * @param boolean $show_manual_scoring   Show specific information for the manual scoring output
-	 * @param boolean $show_question_text
-	 * @return string The solution output of the question as HTML code
-	 */
+
+    /**
+     * Show solution output
+     * @param integer $active_id The active id
+     * @param integer $pass The test pass
+     * @param boolean $graphicalOutput Show visual feedback for right/wrong answers
+     * @param boolean $result_output Show the reached points for parts of the question
+     * @param boolean $show_question_only Show the question without the ILIAS content around
+     * @param boolean $show_feedback Show the question feedback
+     * @param boolean $show_correct_solution Show the correct solution instead of the user solution
+     * @param boolean $show_manual_scoring Show specific information for the manual scoring output
+     * @param boolean $show_question_text
+     * @return string The solution output of the question as HTML code
+     * @throws ilECSConnectorException
+     */
 	public function getSolutionOutput($active_id, $pass = NULL, $graphicalOutput = FALSE, $result_output = FALSE, $show_question_only = TRUE, $show_feedback = FALSE, $show_correct_solution = FALSE, $show_manual_scoring = FALSE, $show_question_text = TRUE): string
 	{
 		if ($show_correct_solution) {

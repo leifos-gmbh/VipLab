@@ -22,20 +22,12 @@ class ilECSSubParticipant
 	private $part_id;
 	private $mid;
 	
-	/**
-	 * Constructor
-	 * @param type $a_json
-	 */
 	public function __construct($a_json = '')
 	{
 		$this->json = $a_json;
 		$this->read();
 	}
 	
-	/**
-	 * Get json string
-	 * @return type
-	 */
 	public function getJson()
 	{
 		return $this->json;

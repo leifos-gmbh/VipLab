@@ -21,15 +21,15 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	{
 		parent::__construct($settings);
 	}
-	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
-	public function addSubParticipant(ilECSSubParticipant $sub)
-	{
+
+
+    /**
+     * @param ilECSSubParticipant $sub
+     * @return ilECSSubParticipant
+     * @throws ilECSConnectorException
+     */
+    public function addSubParticipant(ilECSSubParticipant $sub): ilECSSubParticipant
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Add new sub participant resource...');
 
 	 	$this->path_postfix = self::RESOURCE_PATH;
@@ -81,13 +81,14 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	 	}
 		
 	}
-	
-	/**
-	 * Delete sub participant
-	 * @param type $a_sub_id
-	 */
-	public function deleteSubParticipant($a_sub_id)
-	{
+
+    /**
+     * @param $a_sub_id
+     * @return ilECSResult
+     * @throws ilECSConnectorException
+     */
+	public function deleteSubParticipant($a_sub_id): ilECSResult
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Delete subparticipant with id: '. $a_sub_id);
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	
@@ -114,14 +115,14 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	}
 	}
-	
-	/**
-	 * Parse response string
-	 * @param type $return_str
-	 * @return ilECSSubParticipant
-	 */
-	protected function parseResponse($return_str)
-	{
+
+    /**
+     * @param $return_str
+     * @return ilECSSubParticipant
+     * @throws ilECSConnectorException
+     */
+	protected function parseResponse($return_str): ilECSSubParticipant
+    {
 		$this->curl->parseResponse($return_str);
 		$ecs_result = new ilECSResult($this->curl->getResponseBody());
 
@@ -137,13 +138,14 @@ class ilECSSubParticipantConnector extends ilECSConnector
 		return $sub;
 	}
 
-	public function getResponseHeaderFieldValue($header_array, $header_field)
-	{
+	public function getResponseHeaderFieldValue($header_array, $header_field): ?string
+    {
 		foreach ($header_array as $key => $value) {
 			if (strcasecmp($header_field, $key) == 0) {
 				return trim($value);
 			}
 		}
+        return null;
 	}
 
 }

@@ -20,15 +20,16 @@ class ilECSExerciseConnector extends ilECSConnector
 	{
 		parent::__construct($settings);
 	}
-	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
-	public function addExercise($exercise, $a_receiver_com)
-	{
+
+
+    /**
+     * @param $exercise
+     * @param $a_receiver_com
+     * @return int
+     * @throws ilECSConnectorException
+     */
+	public function addExercise($exercise, $a_receiver_com): int
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Add new exercise ressource for subparticipant: '. print_r($a_receiver_com,true));
 
 	 	$this->path_postfix = self::RESOURCE_PATH;
@@ -82,13 +83,13 @@ class ilECSExerciseConnector extends ilECSConnector
 	 	}
 		
 	}
-	
-	/**
-	 * Delete sub participant
-	 * @param int $a_exc_id
-	 */
-	public function deleteExercise($a_exc_id)
-	{
+
+    /**
+     * @param int $a_exc_id
+     * @throws ilECSConnectorException
+     */
+	public function deleteExercise($a_exc_id): ilECSResult
+    {
 		ilLoggerFactory::getLogger('assviplab')->debug('Delete exercise with id '. $a_exc_id);
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	

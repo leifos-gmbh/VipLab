@@ -11,23 +11,19 @@ include_once './Services/WebServices/ECS/classes/class.ilECSConnectorException.p
 class ilECSPointsConnector extends ilECSConnector
 {
 	const RESOURCE_PATH = '/numlab/points';
-	
-	/**
-	 * Constructor
-	 * @param ilECSSetting $settings 
-	 */
+
+
 	public function __construct(ilECSSetting $settings = null)
 	{
 		parent::__construct($settings);
 	}
-	
-	
-	/**
-	 * Read result
-	 * @param type $a_id
-	 * @return \ilECSResult
-	 * @throws ilECSConnectorException
-	 */
+
+
+    /**
+     * @param $a_id
+     * @return ilECSResult
+     * @throws ilECSConnectorException
+     */
 	public function getPoints($a_id)
 	{
 		$this->path_postfix = self::RESOURCE_PATH.'/'.$a_id;
@@ -57,13 +53,12 @@ class ilECSPointsConnector extends ilECSConnector
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	}
 	}
-	
-	/**
-	 * Add Header
-	 * @param string $a_name
-	 * @param string $a_value
-	 * @deprecated
-	 */
+
+    /**
+     * @param $a_name
+     * @param $a_value
+     * @return void
+     */
 	public function addHeader($a_name,$a_value): void
 	{
 		if(is_array($a_value))

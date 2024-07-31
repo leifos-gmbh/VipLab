@@ -21,12 +21,14 @@ class ilECSEvaluationConnector extends ilECSConnector
 		parent::__construct($settings);
 	}
 	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
+    /**
+     * Add subparticipant
+     *
+     * @param $exercise
+     * @param $a_receiver_com
+     * @return int
+     * @throws ilECSConnectorException
+     */
 	public function addEvaluation($exercise, $a_receiver_com)
 	{
 		ilLoggerFactory::getLogger('viplab')->debug('Add new evaluation ressource for subparticipant: ' . $a_receiver_com);
@@ -84,13 +86,15 @@ class ilECSEvaluationConnector extends ilECSConnector
 	 	}
 		
 	}
-	
-	/**
-	 * Delete sub participant
-	 * @param type $a_exc_id
-	 */
-	public function deleteEvaluation($a_exc_id)
-	{
+
+    /**
+     * Delete sub participant
+     * @param $a_exc_id
+     * @return ilECSResult
+     * @throws ilECSConnectorException
+     */
+	public function deleteEvaluation($a_exc_id): ilECSResult
+    {
 		ilLoggerFactory::getLogger('viplab')->debug('Delete evaluation with id: '. $a_exc_id);
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	

@@ -33,13 +33,13 @@ class ilECSEvaluationJobConnector extends ilECSConnector
 	{
 		return $this->vip_settings;
 	}
-	
-	
-	/**
-	 * Add subparticipant
-	 * @param ilECSSubParticipant $sub
-	 * @param type $a_mid
-	 */
+
+    /**
+     * @param ilECSEvaluationJob $a_evaluation_job
+     * @param $a_targets
+     * @return int
+     * @throws ilECSConnectorException
+     */
 	public function addEvaluationJob(ilECSEvaluationJob $a_evaluation_job, $a_targets)
 	{
 		ilLoggerFactory::getLogger('viplab')->debug('Add new evaluation job ressource for ' . print_r($a_targets,true));

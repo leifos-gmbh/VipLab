@@ -304,8 +304,8 @@ class assViPLab extends assQuestion
 		$this_id = $this->getId();
         $clone = clone $this;
         include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
-        $original_id = assQuestion::_getOriginalId($this->id);
-		$clone->id = -1;
+        $original_id = $this->questioninfo->getOriginalId($this->id);
+        $clone->id = -1;
 		
 		if ((int) $a_test_obj_id > 0)
         {
@@ -349,11 +349,9 @@ class assViPLab extends assQuestion
 	
 	public function createNewOriginalFromThisDuplicate($targetParentId, $targetQuestionTitle = "")
 	{
-		if ($this->id <= 0)
-		{
-			// The question has not been saved. It cannot be duplicated
-			return;
-		}
+        if ($this->getId() <= 0) {
+            throw new RuntimeException('The question has not been saved. It cannot be duplicated');
+        }
 
 		include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
 
@@ -392,15 +390,14 @@ class assViPLab extends assQuestion
 	*/
 	function copyObject($target_questionpool, $title = "")
 	{
-		if ($this->id <= 0)
-		{
-			// The question has not been saved. It cannot be duplicated
-			return;
-		}
+        if ($this->getId() <= 0) {
+            throw new RuntimeException('The question has not been saved. It cannot be duplicated');
+        }
+
 		// duplicate the question in database
 		$clone = $this;
 		include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
-		$original_id = assQuestion::_getOriginalId($this->id);
+		$original_id = $this->getOriginalId();
 		$clone->id = -1;
 		$source_questionpool = $this->getObjId();
 		$clone->setObjId($target_questionpool);
@@ -568,19 +565,7 @@ class assViPLab extends assQuestion
 	}
 	
 
-	/**
-	 * 
-	 * @param type $active_id
-	 * @param type $pass
-	 * @param type $obligationsAnswered
-	 * @param type $authorized
-	 */
-	public function reworkWorkingData($active_id, $pass, $obligationsAnswered, $authorized)
-	{
-		;
-	}
-	
-	/**
+    /**
 	 * Returns the question type of the question
 	 *
 	 * Returns the question type of the question
@@ -639,20 +624,7 @@ class assViPLab extends assQuestion
 		return $text;
 	}
 
-	/**
-	 * required method stub
-	 * 
-	 * @param object $worksheet    Reference to the parent excel worksheet
-	 * @param object $startrow     Startrow of the output in the excel worksheet
-	 * @param object $active_id    Active id of the participant
-	 * @param object $pass         Test pass
-	 */
-	public function setExportDetailsXLS($worksheet, $startrow, $active_id, $pass): int
-	{
-		return parent::setExportDetailsXLS($worksheet, $startrow, $active_id, $pass);
-	}
-	
-	/**
+    /**
 	* Creates a question from a QTI file
 	*
 	* Receives parameters from a QTI parser and creates a valid ILIAS question object
@@ -715,13 +687,9 @@ class assViPLab extends assQuestion
 		return array();  // instant feedback preview is not supported by ViPLab
 	}
 
-	/**
-	 * Delete exercise
-	 * @param type $a_sent_id
-	 */
 	public function deleteExercise($a_sent_id = 0)
 	{
-		$exc_id = $a_sent_id ? $a_sent_id : $this->getVipExerciseId();
+		$exc_id = $a_sent_id ?: $this->getVipExerciseId();
 		
 		if($exc_id)
 		{
@@ -775,11 +743,12 @@ class assViPLab extends assQuestion
 			}
 		}
 	}
-	
-	/**
-	 * Create a new solution
-	 * @return int
-	 */
+
+    /**
+     * Create a new solution
+     * @return int
+     * @throws ilECSConnectorException
+     */
 	public function createEvaluation($a_decode = true, $a_computational_backend = true)
 	{
 		if($a_decode and strlen($this->getVipEvaluation()))
@@ -819,15 +788,17 @@ class assViPLab extends assQuestion
 		catch (ilECSConnectorException $exception)
 		{
 			ilLoggerFactory::getLogger('viplab')->error('Creating evaluation failed with message: '. $exception);
+            throw $exception;
 		}
 	}
-	
-	/**
-	 * Create a new solution
-	 * @return int
-	 */
-	public function createResult($a_active_id, $a_pass)
-	{
+
+    /**
+     * Create a new solution
+     * @return int
+     * @throws ilECSConnectorException
+     */
+	public function createResult($a_active_id, $a_pass): int
+    {
 		$result_arr = $this->getSolutionValues($a_active_id, $a_pass);
 		if(isset($result_arr[1]))
 		{
@@ -851,12 +822,14 @@ class assViPLab extends assQuestion
 		catch (ilECSConnectorException $exception)
 		{
 			ilLoggerFactory::getLogger('viplab')->error('Creating result failed with message: '. $exception);
+            throw $exception;
 		}
 	}
-	
-	/**
-	 * Create exercise
-	 */
+
+    /**
+     * Create exercise
+     * @throws ilECSConnectorException
+     */
 	public function createExercise($a_computational_backend = true)
 	{
 		if(strlen($this->getVipExercise()))
@@ -894,10 +867,14 @@ class assViPLab extends assQuestion
 		catch (ilECSConnectorException $exception)
 		{
 			ilLoggerFactory::getLogger('viplab')->error('Creating exercise failed with message: '. $exception);
+            throw $exception;
 		}
 	}
-	
-	public function createSolution($a_solution, $a_computational_backend = true)
+
+    /**
+     * @throws ilECSConnectorException
+     */
+    public function createSolution($a_solution, $a_computational_backend = true)
 	{
 		try 
 		{
@@ -930,15 +907,19 @@ class assViPLab extends assQuestion
 		catch (ilECSConnectorException $exception)
 		{
 			ilLoggerFactory::getLogger('viplab')->error('Creating solution failed with message: '. $exception);
+            throw $exception;
 		}
-		
 	}
-	
-	protected function createEvaluationJob($a_solution_json, $a_active_id, $a_pass)
+
+    /**
+     * @throws ilECSConnectorException
+     * @throws ilDateTimeException
+     */
+    protected function createEvaluationJob($a_solution_json, $a_active_id, $a_pass)
 	{
 		if(!$this->getVipAutoScoring())
 		{
-			return false;
+			return;
 		}
 		
 		ilLoggerFactory::getLogger('viplab')->debug('---------------- New evaluation job ------------------');
@@ -967,22 +948,14 @@ class assViPLab extends assQuestion
 		
 		ilLoggerFactory::getLogger('viplab')->debug('--------------------- '. $job->getJson().' ---------------------------');
 		
-		try
-		{
-			$scon = new ilECSEvaluationJobConnector(
-				ilViPLabSettings::getInstance()->getECSServer()
-			);
-			$new_id = $scon->addEvaluationJob(
-				$job,
-				ilViPLabSettings::getInstance()->getEvaluationMid()
-			);
+		try {
+			$scon = new ilECSEvaluationJobConnector(ilViPLabSettings::getInstance()->getECSServer());
+			$new_id = $scon->addEvaluationJob($job, ilViPLabSettings::getInstance()->getEvaluationMid());
 			ilLoggerFactory::getLogger('viplab')->debug('Received new evaluation job id ' . $new_id);
-			return $new_id;
-			
-		} 
-		catch (ilECSConnectorException $exception)
-		{
+
+		} catch (ilECSConnectorException $exception) {
 			ilLoggerFactory::getLogger('viplab')->error('Creating evaluation job failed with message: '. $exception);
+            throw $exception;
 		}
 	}
 	
@@ -1004,7 +977,7 @@ class assViPLab extends assQuestion
 			else
 			{
 				$this->tpl->setOnScreenMessage('failure', 'Cannot assign subparticipant.');
-				return false;
+				return;
 			}
 			
 			try 

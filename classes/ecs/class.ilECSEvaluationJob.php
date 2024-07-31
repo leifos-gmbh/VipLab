@@ -13,10 +13,6 @@ class ilECSEvaluationJob
 	private $json;
 	private $part_id;
 	
-	/**
-	 * Constructor
-	 * @param type $a_json
-	 */
 	public function __construct()
 	{
 		$this->EvaluationJob = new stdClass();

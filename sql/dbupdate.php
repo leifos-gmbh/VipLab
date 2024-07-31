@@ -220,3 +220,7 @@ $vipSettings->delete('height');
 
 $vipSettings->delete('active');
 ?>
+<#12>
+<?php
+$ilDB->manipulate("UPDATE qpl_qst_type SET plugin_name = 'assViPLab' WHERE type_tag = 'assViPLab'");
+?>
