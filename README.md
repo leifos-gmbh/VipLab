@@ -32,7 +32,7 @@ ILIAS administrators.
 ## Preparation and Install
 
 ### General requirements and dependencies
-- **ILIAS** (min. version 5.4.0,  max. version 7.999)
+- **ILIAS** (min. version 8.0.0)
 - **VipLabCron**  (ILIAS plugin)
 - **VipLabEvent**  (ILIAS plugin)
 
