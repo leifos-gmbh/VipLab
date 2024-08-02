@@ -58,10 +58,10 @@ class assViPLabImport extends assQuestionImport
                         } else if ($mattext->getLabel() == "vipResultStorage") {
                             $this->object->setVipResultStorage($mattext->getContent());
                         } else if ($mattext->getLabel() == "vipExercise") {
-                            $vipExercise = base64_decode($mattext->getContent());
+                            $vipExercise = base64_decode($mattext->getContent() ?? "");
                             $this->object->setVipExercise($vipExercise);
                         } else if ($mattext->getLabel() == "vipEvaluation") {
-                            $vipEvaluation = base64_decode($mattext->getContent());
+                            $vipEvaluation = base64_decode($mattext->getContent() ?? "");
                             $this->object->setVipEvaluation($vipEvaluation);
                         }
                     }
