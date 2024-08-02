@@ -254,6 +254,35 @@ class assViPLabGUI extends assQuestionGUI
 		
 		$this->editQuestion($form);
 	}
+
+    /**
+     * Bugfix of the reference implementation \ilObjTest::isPreviousSolutionReuseEnabled which errors out for
+     * $active_id = 0, which in turn is passed by \ilObjTestGUI::printObject.
+     *
+     * TODO: remove upon the bugfix of \ilObjTest::isPreviousSolutionReuseEnabled.
+     *
+     * @param $active_id
+     * @return bool
+     */
+    public function isPreviousSolutionReuseEnabled($active_id): bool
+    {
+        global $DIC;
+        $ilDB = $DIC["ilDB"];
+        $ilUser = $DIC["ilUser"];
+
+        $result = $ilDB->queryF(
+            "SELECT tst_tests.use_previous_answers FROM tst_tests, tst_active WHERE tst_tests.test_id = tst_active.test_fi AND tst_active.active_id = %s",
+            ["integer"],
+            [$active_id]
+        );
+
+        if ($result->numRows()) {
+            $row = $ilDB->fetchAssoc($result);
+            return $row["use_previous_answers"] === '1' && $ilUser->getPref("tst_use_previous_answers") === '1';
+        }
+
+        return false;
+    }
 	
 	/**
 	 * Create a new solution on ecs for the client, using data from ilias database.
@@ -272,10 +301,7 @@ class assViPLabGUI extends assQuestionGUI
 		
 		include_once "./Modules/Test/classes/class.ilObjTest.php";
 
-		// Replaces the former static call ilObjTest::_getUsePreviousAnswers.
-		$tmpObjTest = new ilObjTest();
-
-		if ($tmpObjTest->isPreviousSolutionReuseEnabled($a_active_id) && count($sol_arr) == 0)
+		if ($this->isPreviousSolutionReuseEnabled($a_active_id) && count($sol_arr) == 0)
 		{
 			$a_pass = $a_pass ? $a_pass - 1 : $a_pass;
 			$sol_arr = $this->getViPLabQuestion()->getSolutionValues($a_active_id, $a_pass, true);
