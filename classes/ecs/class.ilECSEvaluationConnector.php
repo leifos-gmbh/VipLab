@@ -94,6 +94,7 @@ class ilECSEvaluationConnector extends ilECSConnector
      * @param $a_exc_id
      * @return ilECSResult
      * @throws ilECSConnectorException
+     * @throws ilECSResourceNotFoundException
      */
 	public function deleteEvaluation($a_exc_id): ilECSResult
     {
@@ -113,11 +114,10 @@ class ilECSEvaluationConnector extends ilECSConnector
 	 	{
 	 		$this->prepareConnection();
 	 		$this->curl->setOpt(CURLOPT_CUSTOMREQUEST,'DELETE');
-			$res = $this->call();
+            $res = $this->call();
+            ilViPLabUtil::checkECSResourceForNonPresence($res, $this->curl);
 			return new ilECSResult($res);
-	 	}
-	 	catch(ilCurlConnectionException $exc)
-	 	{
+	 	} catch(ilCurlConnectionException $exc) {
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	} finally {
             $this->curl->close();

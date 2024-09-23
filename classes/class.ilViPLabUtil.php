@@ -109,4 +109,14 @@ class ilViPLabUtil
 		ilLoggerFactory::getLogger('viplab')->info(__METHOD__ . ': Received EContentId ' . $econtent_id);
 		return (int) $econtent_id;
 	}
+
+    /**
+     * @throws ilECSResourceNotFoundException
+     */
+    public static function checkECSResourceForNonPresence($result, $curl): void
+    {
+        if ($curl->getInfo()['http_code'] == 404 || str_contains($result, '404 Not Found')) {
+            throw new ilECSResourceNotFoundException('The referenced ECS resource could not be found.', 404);
+        }
+    }
 }

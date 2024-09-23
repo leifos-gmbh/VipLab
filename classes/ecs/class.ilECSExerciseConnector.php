@@ -89,6 +89,7 @@ class ilECSExerciseConnector extends ilECSConnector
     /**
      * @param int $a_exc_id
      * @throws ilECSConnectorException
+     * @throws ilECSResourceNotFoundException
      */
 	public function deleteExercise($a_exc_id): ilECSResult
     {
@@ -108,13 +109,10 @@ class ilECSExerciseConnector extends ilECSConnector
 	 	{
 	 		$this->prepareConnection();
             $this->curl->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
-            $this->curl->setOpt(CURLOPT_FAILONERROR, true);
 			$res = $this->call();
-
+            ilViPLabUtil::checkECSResourceForNonPresence($res, $this->curl);
 			return new ilECSResult($res);
-		}
-	 	catch(ilCurlConnectionException $exc)
-	 	{
+		} catch(ilCurlConnectionException $exc) {
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	} finally {
             $this->curl->close();

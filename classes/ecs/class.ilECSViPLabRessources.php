@@ -48,16 +48,17 @@ class ilECSViPLabRessources
 			try {
 				self::doDeleteRessource($ressource);
 				$ressource->delete();
-			} 
-			catch (Exception $ex) {
-				;
-			}
+			} catch (ilECSResourceNotFoundException) {
+				// The resource has been deleted on the ECS server, not no need to keep track anymore.
+				$ressource->delete();
+			} catch (Exception) { }
 		}
 	}
 	
 	/**
 	 * Delete ressource
 	 * @param ilECSViPLabRessource $ressource
+	 * @throws ilECSResourceNotFoundException
 	 * @throws Exception
 	 */
 	protected static function doDeleteRessource(ilECSViPLabRessource $ressource)

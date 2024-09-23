@@ -88,6 +88,7 @@ class ilECSSubParticipantConnector extends ilECSConnector
      * @param $a_sub_id
      * @return ilECSResult
      * @throws ilECSConnectorException
+     * @throws ilECSResourceNotFoundException
      */
 	public function deleteSubParticipant($a_sub_id): ilECSResult
     {
@@ -107,13 +108,10 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	 	{
 	 		$this->prepareConnection();
             $this->curl->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
-			$this->curl->setOpt(CURLOPT_FAILONERROR, true);
 			$res = $this->call();
-
+            ilViPLabUtil::checkECSResourceForNonPresence($res, $this->curl);
 			return new ilECSResult($res);
-	 	}
-	 	catch(ilCurlConnectionException $exc)
-	 	{
+	 	} catch(ilCurlConnectionException $exc) {
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
 	 	} finally {
             $this->curl->close();

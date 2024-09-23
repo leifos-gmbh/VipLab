@@ -706,9 +706,7 @@ class assViPLab extends assQuestion
 				{
 					$this->setVipExerciseId(0);
 				}
-			}
-			catch(ilECSConnectorException $e)
-			{
+			} catch(ilECSConnectorException | ilECSResourceNotFoundException $e) {
 				ilLoggerFactory::getLogger('viplab')->error('Deleting exercise failed with message: '. $e->getMessage());
 			}
 		}
@@ -737,11 +735,11 @@ class assViPLab extends assQuestion
 					$this->setVipSubId(0);
 				}
 			}
-			catch(ilECSConnectorException $e)
+			catch(ilECSConnectorException | ilECSResourceNotFoundException $e)
 			{
 				ilLoggerFactory::getLogger('viplab')->error('Deleting subparticipant failed with message: ' . $e->getMessage());
-			}
-		}
+            }
+        }
 	}
 
     /**
