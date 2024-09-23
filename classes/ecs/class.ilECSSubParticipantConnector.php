@@ -78,7 +78,9 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	 	catch(ilCurlConnectionException $exc)
 	 	{
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
+	 	} finally {
+            $this->curl->close();
+        }
 		
 	}
 
@@ -113,7 +115,9 @@ class ilECSSubParticipantConnector extends ilECSConnector
 	 	catch(ilCurlConnectionException $exc)
 	 	{
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
+	 	} finally {
+            $this->curl->close();
+        }
 	}
 
     /**

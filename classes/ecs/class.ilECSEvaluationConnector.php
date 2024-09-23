@@ -83,7 +83,9 @@ class ilECSEvaluationConnector extends ilECSConnector
 	 	catch(ilCurlConnectionException $exc)
 	 	{
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
+	 	} finally {
+            $this->curl->close();
+        }
 		
 	}
 
@@ -117,7 +119,9 @@ class ilECSEvaluationConnector extends ilECSConnector
 	 	catch(ilCurlConnectionException $exc)
 	 	{
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
+	 	} finally {
+            $this->curl->close();
+        }
 	}
 	
 	/**

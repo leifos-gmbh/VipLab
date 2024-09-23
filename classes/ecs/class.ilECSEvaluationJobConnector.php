@@ -79,7 +79,9 @@ class ilECSEvaluationJobConnector extends ilECSConnector
 	 	catch(ilCurlConnectionException $exc)
 	 	{
 	 		throw new ilECSConnectorException('Error calling ECS service: '.$exc->getMessage());
-	 	}
+	 	} finally {
+            $this->curl->close();
+        }
 		
 	}
 	
