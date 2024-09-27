@@ -30,7 +30,7 @@ class ilECSVipResultConnector extends ilECSConnector
      */
 	public function addResult($result, $a_receiver_com): int
     {
-		ilLoggerFactory::getLogger('viplab')->debug('Add new result resource for subparticipant: '.$a_receiver_com);
+		ilLoggerFactory::getLogger('viplab')->debug('Add new result resource for subparticipant: ' . json_encode($a_receiver_com));
 
 	 	$this->path_postfix = self::RESOURCE_PATH;
 	 	
@@ -38,7 +38,7 @@ class ilECSVipResultConnector extends ilECSConnector
 	 	{
 	 		$this->prepareConnection();
 
-			$this->addHeader('Content-Type', 'application/json');
+			$this->addHeader('Content-Type', 'text/plain');
 			$this->addHeader('Accept', 'application/json');
 			$this->addHeader(ilECSConnector::HEADER_MEMBERSHIPS, $a_receiver_com);
 			
